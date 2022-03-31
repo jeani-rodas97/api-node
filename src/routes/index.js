@@ -37,28 +37,30 @@ function verificar(){
 }
 
 router.get('/', async(req, res) => {
-    const respuesta = await fetch('https://api.chucknorris.io/jokes/random', { redirect: 'manual' });
-    const jsonres = await respuesta.json(); 
-    const id = jsonres.id; 
-    const value = jsonres.value; 
-    const icon_url = jsonres.icon_url; 
-    let idjokes = []; 
-    console.log(jsonres); 
-    console.log(jsonres.id);
-    //res.send("joke");
-    //Recorrer el arreglo y comparar jsonre.ide 
-    _.each(jokes, (joke, i) => {
-        if(joke.id == id){
+    //let contador = 1;
+    for( var i = 1; i<15; i++) {
+        fetch('https://api.chucknorris.io/jokes/random').then((response) => response.json()).then((jok) => {
+            //console.log(jok.id, jok.value, jok.icon_url);
+            const id = jok.id; 
+            const value = jok.value; 
+            const icon_url = jok.icon_url; 
+            const newj = {id, value, icon_url}; 
+            //console.log(newj);
             
-        }
-        else {
-            const newjock = {id, value, icon_url}; 
-            idjokes.push(id);
-            jokes.push(newjock);
-            console.log(newjock);
-        }
-    });
-    res.json(jokes);
+                _.each(jokes, (joke, i) => {
+                    console.log(joke.id);
+                    console.log(jok.id);
+                    if(joke.id != jok.id ){
+                        jokes.push(newj);
+                        console.log(newj);
+                        //contador = contador+1;
+                        res.json(jokes);
+                    }
+                });            
+        });
+    }
+
+    
     
 });
 
